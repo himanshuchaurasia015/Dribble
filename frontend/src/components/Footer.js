@@ -4,8 +4,8 @@ import { FiYoutube } from "react-icons/fi";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-100  py-8">
-      <div className="container px-10 md:mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+    <footer className="bg-gray-100  py-10">
+      <div className="container px-10 md:mx-auto grid grid-cols-2 mx-8 md:grid-cols-3 lg:grid-cols-5 gap-8 ">
         <div>
         <h3 className="text-2xl font-bold text-pink-600 mb-4">dribble</h3>
         <p>Dribble is a world leading community for creatives to share, grow, and get hired</p>
