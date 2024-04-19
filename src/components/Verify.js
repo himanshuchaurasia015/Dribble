@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import Header from './Header'
 import Footer from './Footer'
 import { userContext } from '../context/userContext';
+import Error from './Error';
 
 
 const Verify= () => {
@@ -12,6 +13,8 @@ const Verify= () => {
   
 
   return (<>
+   {localStorage.getItem("token") && email?
+   <>
   <Header/>
     <div className="flex justify-center text-center items-center h-screen md:h-full md:p-28">
       <div className="bg-white p-8 w-full lg:max-w-screen-lg">
@@ -55,7 +58,7 @@ const Verify= () => {
         </p>
       </div>
     </div>
-    <Footer/>
+    <Footer/></>:<Error text="The Connection Has Timed Out"/>}
     </>
   );
 };

@@ -1,60 +1,74 @@
 import React, { useContext, useState } from 'react';
 import axios from 'axios';
-import ImagePreview from './ImagePreview';
-import Camera from 'react-html5-camera-photo';
+// import ImagePreview from './ImagePreview';
+// import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import { useNavigate } from 'react-router';
 import { userContext } from '../context/userContext';
+import Error from './Error';
 
 const ProfileCreation = () => {
   const values=useContext(userContext)
   const navigate=useNavigate()
   const [avatar, setAvatarImage] = useState(null);
   const [location, setLocation] = useState('');
-  const [dataUri, setDataUri] = useState('');
+  // const [dataUri, setDataUri] = useState('');
   const [file,setFile]=useState(null)
   const [camera, setCamera] = useState("hidden");
+  const [processing, setProcessing] = useState("Next");
+  const [err, setErr] = useState("");
+
+
 
 const handleSubmit=async(e)=>{
+  if(location && avatar){
 
-  const formData = new FormData();
-  formData.append('avatar', file);
-  formData.set("location",location)
- 
- 
+    const formData = new FormData();
+    formData.append('avatar', file);
+    formData.set("location",location)
+   
+   
+  setProcessing("Processing...")
+    try {
+      const response = await axios.put('http://localhost:4000/api/v1/me/img', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': localStorage.getItem('token'),
+        },
+      }).then((res)=>{
+       
+          navigate("/goal")
+        values.setProfile(avatar)
+        console.log(values.user)
 
-  try {
-    const response = await axios.put('http://localhost:4000/api/v1/me/img', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': localStorage.getItem('token'),
-      },
-    }).then((res)=>{
-      if(res.status===200){
-        navigate("/goal")
-values.setProfile(avatar)
+  
+  
+        
+      }).catch((err)=>{
+      setErr(err.message)
+        setProcessing("Next")
+      });
+    } catch (error) {
+      console.error(error);
+    }
 
 
-      }
-    });
-    // console.log(response.data);
-  } catch (error) {
-    console.error(error);
   }
+  
 }
 
 
-  function handleTakePhotoAnimationDone (dataUri) {
-    console.log('takePhoto');
-    setCamera("hidden")
-    setAvatarImage(dataUri)
-    setDataUri(dataUri);
-  }
+  // function handleTakePhotoAnimationDone (dataUri) {
+  //   console.log('takePhoto');
+  //   setCamera("hidden")
+  //   setAvatarImage(dataUri)
+  //   setDataUri(dataUri);
+  // }
 
-  const isFullscreen = false;
+  // const isFullscreen = false;
   const handleAvatarUpload = (e) => {
     const upfile = e.target.files[0];
-  setFile(upfile)
+    setFile(upfile)
 
     setAvatarImage(URL.createObjectURL(upfile));
   };
@@ -65,8 +79,8 @@ values.setProfile(avatar)
  
   
 
-  return (
-    <div className="flex flex-col lg:items-start gap-5 md:ms-[30%] items-center justify-center min-h-screen bg-white">
+  return (<>{localStorage.getItem("token")?
+    <div className="flex flex-col lg:items-start gap-5 md:ms-[30%] items-center justify-center min-h-screen py-10 bg-white">
       <h1 className="text-3xl font-bold mb-8 text-pink-500 text-center  md:text-4xl">
         Welcome! Let's create your profile
       </h1>
@@ -89,7 +103,7 @@ values.setProfile(avatar)
             </div>
           )}
         </div>
-        <div className={`${camera}`}>
+        {/* <div className={`${camera}`}>
       {
         (dataUri)
           ? <ImagePreview dataUri={dataUri}
@@ -99,7 +113,7 @@ values.setProfile(avatar)
             isFullscreen={isFullscreen}
           />
       }
-    </div>
+    </div> */}
        
         <div className="">
            <label htmlFor="choose-image" className="text-sm text-gray-500 bg-white cursor-pointer md:text-base text-center border px-3 py-1 rounded-md ">
@@ -127,10 +141,12 @@ values.setProfile(avatar)
         />
       </div>
 
-      <button onClick={handleSubmit} className={`${location && avatar?"bg-pink-500 hover:bg-pink-600": "disable bg-pink-300" } text-white px-6 py-3 rounded-md  transition-colors duration-300 text-lg md:text-xl`} >
-        Next
+      <button onClick={handleSubmit}  className={`${location && avatar?"bg-pink-500 hover:bg-pink-600": "bg-pink-300" } text-white px-6 py-3 rounded-md transition-colors duration-300 text-lg md:text-xl`} >
+        {processing}
       </button>
-    </div>
+      <div className={`text-xs lg:ms-12 text-red-500`}>{err}</div>
+
+    </div>:<Error text="Page Not Found"/>}</>
   );
 };
 

@@ -23,7 +23,7 @@ function App() {
     <userContext.Provider value={{user,setUser,profile,setProfile}}>
     <Router>
       <Routes>
-        <Route exact path="/signup" element={<SignUp/>}/>
+        <Route exact path="/" element={<SignUp/>}/>
         <Route exact path="/createprofile" element={<ProfileCreation/>}/>
         <Route exact path="/goal" element={<WhatBringsYou/>}/>
         <Route exact path="/verify" element={<Verify/>}/>

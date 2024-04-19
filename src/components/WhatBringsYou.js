@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { userContext } from '../context/userContext';
+import Error from './Error';
 
 const WhatBringsYou = () => {
 
@@ -9,6 +10,10 @@ const values=useContext(userContext)
 
 const navigate=useNavigate()
 const [goals,setGoals]= useState([])
+const [err,setErr]= useState("")
+const [processing, setProcessing] = useState("Finish");
+
+
 
 
 function chkbox(e) {
@@ -28,8 +33,8 @@ function chkbox(e) {
 
 
 const handleSubmit=async(e)=>{
+  setProcessing("Processing...")
  values.setUser({...values.user,goals})
-console.log(values.user)
  const formData = new FormData();
   formData.set("goals",goals)
 
@@ -44,6 +49,9 @@ console.log(values.user)
         navigate("/verify")
 
       }
+    }).catch((err)=>{
+    setErr(err.message)
+  setProcessing("Finish")
     });
   } catch (error) {
     console.error(error);
@@ -51,10 +59,11 @@ console.log(values.user)
 }
 
 
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+  return (<>
+  {localStorage.getItem("token")?
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-10">
       <div className="flex items-center mb-8">
-        <button className="bg-gray-200 text-gray-600 rounded-full p-2 hover:bg-gray-300 transition-colors">
+        <a href="/createprofile" className="bg-gray-200 text-gray-600 rounded-full p-2 hover:bg-gray-300 transition-colors">
           <svg
             className="h-6 w-6"
             fill="none"
@@ -68,7 +77,7 @@ console.log(values.user)
               d="M10 19l-7-7m0 0l7-7m-7 7h18"
             />
           </svg>
-        </button>
+        </a>
         <h1 className="text-2xl font-bold ml-4 text-pink-500">
           What brings you to Dribbble?
         </h1>
@@ -142,9 +151,12 @@ console.log(values.user)
       </div>
 
       <button onClick={handleSubmit} className="bg-pink-500 text-white px-6 py-3 rounded-md hover:bg-pink-600 transition-colors duration-300 text-lg md:text-xl">
-        Finish
+        {processing}
       </button>
-    </div>
+      <div className={`text-xs lg:ms-12 text-red-500`}>{err}</div>
+
+    </div>:<Error text="Page Not Found"/>}
+    </>
   );
 };
 
