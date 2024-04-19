@@ -37,11 +37,16 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
   }
 
 
-  const user = await User.create({
+ await User.create({
       name, email, password, username
+  }).then((resp)=>{
+    sendToken(resp, 201, res);
+  }).catch((err)=>{
+    console.log(err)
+    return next(new ErrorHandler("can't able to register now", 401));
   });
 
-  sendToken(user, 201, res);
+  
 });
 
 
