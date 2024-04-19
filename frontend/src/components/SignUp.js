@@ -26,7 +26,7 @@ const timerId=setTimeout(async()=>{
   if(username.length!==0){
 
      await axios
-    .post("http://localhost:4000/api/v1/username", {username}).then((res)=>{
+    .post("https://dribble-cxq4.onrender.com/api/v1/username", {username}).then((res)=>{
       if(res.status===200){
         setUnique("hidden")
         }
@@ -54,7 +54,7 @@ const handleSubmit = async(e) => {
   };
 setSubmitText("Loading...")
   await axios
-    .post("http://localhost:4000/api/v1/register", formData)
+    .post("https://dribble-cxq4.onrender.com/api/v1/register", formData)
     .then((res) => {
       localStorage.setItem('token', res.data.token);
       values.setUser({...values.user,email})

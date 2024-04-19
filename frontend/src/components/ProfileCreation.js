@@ -30,7 +30,7 @@ const handleSubmit=async(e)=>{
    
   setProcessing("Processing...")
     try {
-      const response = await axios.put('http://localhost:4000/api/v1/me/img', formData, {
+      const response = await axios.put('https://dribble-cxq4.onrender.com/api/v1/me/img', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': localStorage.getItem('token'),

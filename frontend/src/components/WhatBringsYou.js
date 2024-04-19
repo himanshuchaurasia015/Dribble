@@ -39,7 +39,7 @@ const handleSubmit=async(e)=>{
   formData.set("goals",goals)
 
   try {
-    const response = await axios.put('http://localhost:4000/api/v1/me/update', values.user, {
+    const response = await axios.put('https://dribble-cxq4.onrender.com/api/v1/me/update', values.user, {
       headers: {
         // 'Content-Type': 'multipart/form-data',
         'Authorization': localStorage.getItem('token'),
